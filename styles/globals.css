@@ -3,6 +3,18 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --custom-blue: #FF5207;
+  --custom-orange: #FF5207;
+  --custom-lightGray: #F5F6FA;
+  --custom-black: #202224;
+  --custom-green: #00B69B;
+  --custom-lightsGrayColor: #B9B9B9;
+  --custom-lightGrayInputBg: #F5F6FA;
+  --custom-lightGrayInputName: #606060;
+  --custom-offWhite: #D5D5D5;
+  --custom-gray: #445268;
+  --custom-darkGray: #62676C;
+
 }
 
 @theme inline {
@@ -19,8 +31,41 @@
   }
 }
 
+/* @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap'); */
+
+/* @font-face {
+  font-family: 'NunitoSans';
+  src: url('/public/font/Nunito_Sans/NunitoSans-VariableFont_YTLC\,opsz\,wdth\,wght.ttf');
+} */
+
 body {
+  /* font-family: "Nunito Sans", sans-serif; */
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+
+  /* font-family: 'NunitoSans' !important; */
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  @variants responsive {
+
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+    }
+  }
+}
+
+.boxShadow {
+  box-shadow: 6px 6px 54px 0px #0000000D;
 }

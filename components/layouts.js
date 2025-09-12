@@ -35,6 +35,13 @@ const menuItems = [
     activeIcon: "/home.png",
     access: ["admin"],
   },
+  {
+    href: "/service-provider",
+    title: "Service Provider",
+    icon: <BiSolidCategory />,
+    activeIcon: "/home.png",
+    access: ["admin"],
+  },
   // {
   //   href: "/transporter",
   //   title: "Transporter",
@@ -155,9 +162,9 @@ const Layout = ({ children, loader, toaster }) => {
   };
 
   const getusername = () => {
-    console.log(user)
+    // console.log(user)
     setUserName(user?.name);
-    console.log(userName, initial);
+    // console.log(userName, initial);
   };
 
   return (

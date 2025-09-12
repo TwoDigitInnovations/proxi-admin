@@ -14,7 +14,9 @@
   --custom-offWhite: #D5D5D5;
   --custom-gray: #445268;
   --custom-darkGray: #62676C;
-
+  --custom-newBlue: #2048BD;
+  --custom-newBlack: #434343;
+  --custom-darkGreen: #0A5C03;
 }
 
 @theme inline {

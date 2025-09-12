@@ -1,7 +1,7 @@
 import axios from "axios";
-// const ConstantsUrl = "https://api.hironow.com/v1/api";
+const ConstantsUrl = "https://proxyapp-backend.onrender.com/";
 
-const ConstantsUrl = "http://localhost:3000/";
+// const ConstantsUrl = "http://localhost:3000/";
 
 function Api(method, url, data, router) {
   return new Promise(function (resolve, reject) {
@@ -9,7 +9,7 @@ function Api(method, url, data, router) {
     if (typeof window !== "undefined") {
       token = localStorage?.getItem("token") || "";
     }
-    console.log(token);
+    // console.log(token);
     axios({
       method,
       url: ConstantsUrl + url,
@@ -49,7 +49,7 @@ function ApiFormData(method, url, data, router) {
       url: ConstantsUrl + url,
       data,
       headers: {
-        Authorization: `jwt ${token}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data",
       },
     }).then(

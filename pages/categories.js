@@ -1,18 +1,23 @@
-import { Api } from "@/services/service";
-import React, { useState, useEffect } from "react";
+import { Api, ApiFormData } from "@/services/service";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { FiEdit } from "react-icons/fi";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import Swal from "sweetalert2";
+import { MdOutlineFileUpload } from "react-icons/md";
 
 function Categories(props) {
   const router = useRouter();
   const [data, setData] = useState({
     name: "",
+    image: "",
   });
   const [loadTypeData, setloadTypeData] = useState([]);
   const [editid, seteditid] = useState("");
   const [mainFilterData, setMainFilterData] = useState([]);
+  const f = useRef(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   useEffect(() => {
     getCategory();
@@ -38,22 +43,35 @@ function Categories(props) {
   const submit = (e) => {
     e.preventDefault();
 
+    const datas = new FormData();
+    datas.append('name', data.name);
+
+    if (selectedImage) {
+      datas.append('image', selectedImage);
+    } else {
+      console.log('No image selected');
+    }
+
+
     let method = "post";
     let url = "category/createCategory";
     if (editid) {
-      data.id = data._id;
+      datas.id = data._id;
       url = `category/updateCategory`;
       method = "post";
     }
 
-    Api(method, url, data, router).then(
+    ApiFormData(method, url, datas, router).then(
       (res) => {
         console.log("Post truck type", res);
         setData({
           name: "",
+          image: "",
         });
         getCategory();
         seteditid("");
+        setSelectedImage(null);
+        setImagePreview(null);
       },
       (err) => {
         console.log(err);
@@ -99,6 +117,78 @@ function Categories(props) {
     });
   };
 
+  // const handleImageChange = (event) => {
+  //   return
+  //   const file = event.target.files[0];
+  //   const datas = new FormData();
+  //   datas.append("file", file);
+  //   props.loader(true);
+  //   ApiFormData("post", "/user/fileupload", datas, router).then(
+  //     (res) => {
+  //       props.loader(false);
+  //       console.log("res================>", res);
+  //       if (res.status) {
+  //         setData({ ...data, image: res.data.file });
+  //         props.toaster({ type: "success", message: res.data.message });
+  //       }
+  //     },
+  //     (err) => {
+  //       props.loader(false);
+  //       console.log(err);
+  //       props.toaster({ type: "error", message: err?.message });
+  //     }
+  //   );
+  //   const reader = new FileReader();
+  //   // let key = event.target.name;
+  //   // reader.onloadend = () => {
+  //   //   const base64 = reader.result;
+  //   //   console.log(base64);
+  //   //   // setData({ ...data, img: base64, profile: file });
+  //   // };
+
+  //   // if (file) {
+  //   //   reader.readAsDataURL(file);
+  //   // }
+  // };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    console.log(file)
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        Swal.fire('Error!', 'Please select an image file', 'error');
+        return;
+      }
+
+      // Validate file size (10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        Swal.fire('Error!', 'Image size should be less than 10MB', 'error');
+        return;
+      }
+
+      setSelectedImage(file);
+      console.log(file)
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        console.log(e.target.result)
+        setImagePreview(e.target.result);
+        // setData({ ...data, image: e.target.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const clearImage = () => {
+    setSelectedImage(null);
+    setImagePreview(null);
+    // setData({
+    //   name: "",
+    //   image: "",
+    // });
+  };
+
   return (
     <section className=" w-full h-full bg-transparent md:pt-5 pt-5 pb-5 pl-5 pr-5">
       <p className="font-bold  text-black md:text-[32px] text-2xl">Add Categories</p>
@@ -122,6 +212,53 @@ function Categories(props) {
                 required
               />
             </div>
+
+            <div className="mt-5 relative">
+              <div className="flex flex-col justify-start items-start">
+                <p className="text-[var(--custom-lightGrayInputName)] text-sm font-semibold pb-2">
+                  Upload image
+                </p>
+                <div className="bg-[var(--custom-lightGrayInputBg)] border border-[var(--custom-offWhite)] md:h-[50px] h-[40px] md:w-[500px] w-full rounded-[5px] px-5 text-sm font-normal text-black flex justify-start items-center">
+                  <input
+                    type="text"
+                    className="bg-[var(--custom-lightGrayInputBg)] outline-none md:w-[90%] w-[85%]"
+                    value={data?.image}
+                    onChange={(e) => {
+                      setData({ ...data, image: e.target.value });
+                    }}
+                  // required
+                  />
+                </div>
+              </div>
+
+              <div className="absolute top-[36px] md:right-[10px]  right-[10px]">
+                <MdOutlineFileUpload
+                  className="text-black h-8 w-8 cursor-pointer"
+                  onClick={() => {
+                    f.current.click();
+                  }}
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={f}
+                  className="hidden"
+                  onChange={handleImageChange}
+                />
+              </div>
+            </div>
+            {imagePreview && (
+              <div className="flex items-center space-x-2 mt-5">
+                <img src={imagePreview} alt="Preview" className="w-16 h-16 object-cover rounded-md" />
+                <button
+                  type="button"
+                  onClick={clearImage}
+                  className="btn-secondary btn-sm"
+                >
+                  Clear Image
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="flex justify-center items-center pt-5">
@@ -167,7 +304,9 @@ function Categories(props) {
                 <FiEdit
                   className={`md:h-[30px] h-[20px] md:w-[30px] w-[20px] text-[var(--custom-darkGray)] mr-[20px] cursor-pointer`}
                   onClick={() => {
-                    seteditid(item._id), setData(item);
+                    console.log(item)
+                    seteditid(item._id), setData({ name: item?.name });
+                    setImagePreview(item?.image)
                   }}
                 />
                 <IoCloseCircleOutline

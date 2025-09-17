@@ -11,6 +11,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/effect-fade';
 import { Navigation } from 'swiper/modules';
+import isAuth from '@/components/isAuth';
 
 function ServiceProvider(props) {
     const router = useRouter();
@@ -310,4 +311,4 @@ function ServiceProvider(props) {
     )
 }
 
-export default ServiceProvider
+export default isAuth(ServiceProvider);

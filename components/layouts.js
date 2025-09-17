@@ -42,6 +42,13 @@ const menuItems = [
     activeIcon: "/home.png",
     access: ["admin"],
   },
+  {
+    href: "/generate-token",
+    title: "Generate Token",
+    icon: <BiSolidCategory />,
+    activeIcon: "/home.png",
+    access: ["admin"],
+  },
   // {
   //   href: "/transporter",
   //   title: "Transporter",
@@ -169,7 +176,7 @@ const Layout = ({ children, loader, toaster }) => {
 
   return (
     <>
-      <div className="md:min-h-screen flex sm:flex-1 flex-col bg-[var(--custom-lightGray)]">
+      <div className="md:min-h-screen min-h-screen flex sm:flex-1 flex-col bg-[var(--custom-lightGray)]">
         {router.route !== "/login" && router.route !== "/forget-password" && router.route !== "/signup" && router.route !== "/privacy" && router.route !== "/term" && (
           <header
             className={`bg-white fixed top-0 w-full h-16 flex  font-semibold uppercase  z-30 ${toggleDrawer && user?.id !== "6450e9bef4d2cc08c2ec0431"

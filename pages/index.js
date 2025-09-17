@@ -1,7 +1,7 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+import React from 'react'
+import isAuth from "@/components/isAuth";
 
-export default function Home() {
+function Home() {
   return (
     <section className="w-full h-full  bg-transparent md:pt-5 pt-5 pb-5 pl-5 pr-5">
       <div className='md:pt-[0px] pt-[0px] h-full'>
@@ -74,3 +74,5 @@ export default function Home() {
     </section>
   );
 }
+
+export default isAuth(Home)

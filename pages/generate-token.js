@@ -7,7 +7,7 @@ function GenerateToken() {
         email: "",
         phone: "",
         gender: "",
-        purposeOfvisit: "",
+        purpose_of_visit: "",
     })
 
     const createGenerateToke = async (e) => {
@@ -18,42 +18,25 @@ function GenerateToken() {
             email: generateTokenData?.email,
             phone: generateTokenData?.phone,
             gender: generateTokenData?.gender,
-            purposeOfvisit: generateTokenData?.purposeOfvisit,
+            purpose_of_visit: generateTokenData?.purpose_of_visit,
         }
         console.log(data);
         console.log(generateTokenData);
-        // return
+        return
         props.loader(true);
-        Api("post", "createProduct", data, router).then(
+        Api("post", "appointment/createAppointment", data, router).then(
             (res) => {
                 props.loader(false);
                 console.log("res================> category ", res);
                 if (res.status) {
-                    setAddProductsData({
+                    setGenerateTokenData({
                         name: "",
-                        category_type: "",
-                        category: [],
-                        price: "",
-                        offer: "",
-                        short_description: "",
+                        email: "",
+                        phone: "",
                         gender: "",
-                        long_description: "",
-                        price_slot: [
-                            {
-                                value: 0,
-                                price: 0,
-                            },
-                        ],
+                        purpose_of_visit: "",
                     });
-                    setvarients([
-                        {
-                            color: "",
-                            image: [],
-                            selected: [],
-                        },
-                    ]);
-                    router.push("/products");
-                    props.toaster({ type: "success", message: res.data?.message });
+                    props.toaster({ type: "success", message: "Appointment added successfully" });
                 } else {
                     props.toaster({ type: "error", message: res?.data?.message });
                 }
@@ -136,11 +119,11 @@ function GenerateToken() {
                             className="bg-white w-full pl-5 pr-5 py-2 border border-[#85808033] rounded-[10px] outline-none text-[#797979D9] text-base font-normal"
                             rows={4}
                             placeholder="Purpose of Visit"
-                            value={generateTokenData.purposeOfvisit}
+                            value={generateTokenData.purpose_of_visit}
                             onChange={(e) =>
                                 setGenerateTokenData({
                                     ...generateTokenData,
-                                    purposeOfvisit: e.target.value,
+                                    purpose_of_visit: e.target.value,
                                 })
                             }
                             required

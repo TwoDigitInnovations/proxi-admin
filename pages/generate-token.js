@@ -1,14 +1,41 @@
 import isAuth from '@/components/isAuth';
-import React, { useState } from 'react'
+import { Api } from '@/services/service';
+import React, { useEffect, useState } from 'react'
+import { useRouter } from "next/router";
+import { IoCloseCircleOutline } from "react-icons/io5";
 
-function GenerateToken() {
+function GenerateToken(props) {
+    const router = useRouter();
+    const [serviceProviderData, setServiceProviderData] = useState([]);
     const [generateTokenData, setGenerateTokenData] = useState({
         name: "",
         email: "",
         phone: "",
         gender: "",
         purpose_of_visit: "",
+        service: "",
     })
+    const [viewPopup, setviewPopup] = useState(false)
+
+    useEffect(() => {
+        getProvider();
+    }, []);
+
+    const getProvider = async () => {
+        props.loader(true);
+        Api("get", "auth/getProvider", "", router).then(
+            (res) => {
+                props.loader(false);
+                console.log("res================> form data :: ", res);
+                setServiceProviderData(res.data);
+            },
+            (err) => {
+                props.loader(false);
+                console.log(err);
+                props.toaster({ type: "error", message: err?.message });
+            }
+        );
+    };
 
     const createGenerateToke = async (e) => {
         e.preventDefault();
@@ -19,27 +46,31 @@ function GenerateToken() {
             phone: generateTokenData?.phone,
             gender: generateTokenData?.gender,
             purpose_of_visit: generateTokenData?.purpose_of_visit,
+            service: generateTokenData?.service,
         }
         console.log(data);
         console.log(generateTokenData);
-        return
+        // return
         props.loader(true);
         Api("post", "appointment/createAppointment", data, router).then(
             (res) => {
                 props.loader(false);
                 console.log("res================> category ", res);
                 if (res.status) {
+                    setviewPopup(true);
                     setGenerateTokenData({
                         name: "",
                         email: "",
                         phone: "",
                         gender: "",
                         purpose_of_visit: "",
+                        service: "",
                     });
-                    props.toaster({ type: "success", message: "Appointment added successfully" });
-                } else {
-                    props.toaster({ type: "error", message: res?.data?.message });
+                    // props.toaster({ type: "success", message: "Appointment added successfully" });
                 }
+                // else {
+                //     props.toaster({ type: "error", message: res?.data?.message });
+                // }
             },
             (err) => {
                 props.loader(false);
@@ -47,6 +78,10 @@ function GenerateToken() {
                 props.toaster({ type: "error", message: err?.message });
             }
         );
+    };
+
+    const handleClose = () => {
+        setviewPopup(false);
     };
 
     return (
@@ -114,6 +149,29 @@ function GenerateToken() {
                         </select>
                     </div>
 
+                    <div className="px-3 w-full bg-white border border-[#85808033] rounded-[10px] md:col-span-2">
+                        <select
+                            value={generateTokenData.service}
+                            onChange={(newValue) => {
+                                console.log(newValue)
+                                setGenerateTokenData({
+                                    ...generateTokenData,
+                                    service: newValue.target.value,
+                                });
+                            }}
+                            required
+                            className="bg-white w-full md:h-[45px] h-[40px] pr-5  outline-none text-[#797979D9] text-base font-normal"
+                            placeholder="Service"
+                        >
+                            <option value="" className="p-5">
+                                Service
+                            </option>
+                            {serviceProviderData?.map((item, i) => (<option key={i} value={item._id} className="p-5">
+                                {item.name}
+                            </option>))}
+                        </select>
+                    </div>
+
                     <div className="md:col-span-2 w-full">
                         <textarea
                             className="bg-white w-full pl-5 pr-5 py-2 border border-[#85808033] rounded-[10px] outline-none text-[#797979D9] text-base font-normal"
@@ -135,6 +193,24 @@ function GenerateToken() {
                     </div>
                 </form>
             </div>
+
+            {viewPopup && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+                    <div className="relative w-full max-w-md bg-white shadow-2xl overflow-hidden">
+                        <IoCloseCircleOutline
+                            className="text-black h-8 w-8 absolute right-2 top-2"
+                            onClick={handleClose}
+                        />
+                        <div className='md:p-10 p-5 flex flex-col justify-center items-center'>
+                            <img className='md:w-[148px] w-[100px] md:h-[148px] h-[100px] rounded-full' src='image-1.png' />
+                            <p className='text-black md:text-2xl text-xl font-semibold'>Paid Successful</p>
+                            <p className='text-black text-base font-normal text-center mt-2'>Your ticket is generated you will receive it on the mail you mentioned !</p>
+                            <button className='bg-[var(--custom-newOrange)] md:w-[80px] w-full md:h-[50px] h-[40px] rounded-[10px] boxShadowGenerateToken text-white text-base font-normal mt-5' onClick={handleClose}>Ok</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </section>
     )
 }

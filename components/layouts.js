@@ -49,6 +49,13 @@ const menuItems = [
     activeIcon: "/home.png",
     access: ["admin"],
   },
+  {
+    href: "/content-management",
+    title: "Contents",
+    icon: <BiSolidCategory />,
+    activeIcon: "/home.png",
+    access: ["admin"],
+  },
   // {
   //   href: "/transporter",
   //   title: "Transporter",

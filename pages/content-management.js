@@ -14,14 +14,14 @@ function ContentManagement(props) {
   const router = useRouter();
 
   useEffect(() => {
-    // getContent()
+    getContent();
   }, [])
 
   const getContent = () => {
     props.loader(true);
-    Api("get", "content", router).then(
+    Api("get", "content/getContent", router).then(
       (res) => {
-        console.log("res================>", res.data.incident);
+        console.log("res================>", res.data);
         props.loader(false);
 
         if (res?.status) {
@@ -52,11 +52,12 @@ function ContentManagement(props) {
     }).then((result) => {
       if (result.isConfirmed) {
         props.loader(true);
-        Api("post", "content", terms, router).then(
+        Api("post", "content/createContent", terms, router).then(
           (res) => {
             console.log("res================>", res.data.incident);
             props.loader(false);
             if (res?.status) {
+              getContent();
               // console.log(res.data)
               props.toaster({ type: "success", message: res?.data?.message })
 

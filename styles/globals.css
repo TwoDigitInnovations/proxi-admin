@@ -39,17 +39,23 @@
 
 /* @font-face {
   font-family: 'NunitoSans';
-  src: url('/public/font/Nunito_Sans/NunitoSans-VariableFont_YTLC\,opsz\,wdth\,wght.ttf');
+  src: url('/public/font/nunito-sans/NunitoSans-Regular.ttf');
 } */
 
 body {
   /* font-family: "Nunito Sans", sans-serif; */
-  background: var(--background);
+  /* background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, Helvetica, sans-serif; */
 
   /* font-family: 'NunitoSans' !important; */
+
+  font-family: 'Nunito Sans', sans-serif;
 }
+
+/* .NunitoSans {
+  font-family: 'NunitoSans' !important;
+} */
 
 @layer utilities {
   .text-balance {
